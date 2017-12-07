@@ -1,6 +1,7 @@
 let THREE = require('three');
 let obj = require('./objClass');
 let WORLD = require('./worldClass');
+let LIGHT = require('./lightClass');
 
 
 function initThree() {
@@ -8,10 +9,9 @@ function initThree() {
     camera.position.set(0, 5, 25);
     world.addCamera(camera);
 
-    let light = new THREE.PointLight( 0xffffff, 1, 100 );
-    light.position.set( 5, 5, 0 );
-    light.castShadow = true;
-    world.scene.add( light );
+    let light = new LIGHT.MyLight(0xffffff, 5, 15, 0).pointLight();
+    world.add(light);
+
 
     let sp = new obj.MyObject().Cube(30, 0.1, 30,  0)
         .setColor(1, 1, 1)
@@ -32,7 +32,7 @@ setInterval(function () {
         .moveTo(0, 0, 0)
         .setSpeed(4*Math.random()-2, 20*Math.random(), 4*Math.random()-2);
     world.add(sp);
-}, 100);
+}, 1000);
 
 
 let world = new WORLD.MyWorld();

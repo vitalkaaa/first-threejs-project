@@ -1,18 +1,25 @@
-var browserSync = require('browser-sync');
-var browserify = require('gulp-browserify');
-var gulp = require("gulp");
-var server = require('gulp-express');
-var reload = browserSync.reload;
+let browserSync = require('browser-sync');
+let browserify = require('gulp-browserify');
+let gulp = require("gulp");
+let server = require('gulp-express');
+var clean = require('gulp-clean');
+let reload = browserSync.reload;
 
-gulp.task('scripts', function(){
-    return gulp.src('public/javascripts/three.js')
+gulp.task('build', function(){
+    gulp.src('public/*', {read: false})
+        .pipe(clean());
+
+    gulp.src('src/index.html')
+        .pipe(gulp.dest('public/'));
+
+    return gulp.src('src/javascripts/main.js')
                 .pipe(browserify())
-                .pipe(gulp.dest('public/javascripts/out'))
+                .pipe(gulp.dest('public/javascripts/'))
                 .pipe(reload({stream:true}));
 });
 
 
-gulp.task('browserSync',['scripts', 'server'], function() {
+gulp.task('browserSync',['build', 'server'], function() {
     browserSync({
         port: 5000,
         open: true,
@@ -22,7 +29,7 @@ gulp.task('browserSync',['scripts', 'server'], function() {
 
 
 gulp.task('watcher',function(){
-    gulp.watch('public/javascripts/*.js', ['scripts']);
+    gulp.watch('src/*/*.js', ['build']);
 });
 
 gulp.task('server',function(){
